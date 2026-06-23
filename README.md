@@ -34,9 +34,10 @@ ZMK Forge extends the upstream ZMK Studio UI with two additional capabilities:
 | GitHub Sync | Any ZMK Studio-compatible keyboard |
 | Live Tuning (Gesture / AML / CPI / Timing) | **Pyuron-compatible firmware with `pyuron_*` custom RPC only** |
 
-Live Tuning panels are hidden automatically when the connected keyboard does not
-advertise the required custom RPC service. Connecting a standard ZMK keyboard will not
-cause errors — those tabs simply will not appear.
+Connecting a standard ZMK keyboard works normally — keymap editing and GitHub Sync
+are fully usable. The Live Tuning tabs are still shown, but each displays an
+"unsupported" message when the connected firmware does not advertise the required
+custom RPC service. Connecting a standard ZMK keyboard never causes errors.
 
 ➡️ **Want Live Tuning on your own keyboard?** See
 [docs/FIRMWARE-COMPATIBILITY.md](./docs/FIRMWARE-COMPATIBILITY.md) for how to build a
@@ -83,35 +84,43 @@ your config repos.
 
 ---
 
-## Development
+## Build from source / 自分でビルドする
+
+Anyone can build ZMK Forge from source — you do not need to download the release.
 
 ### Prerequisites
 
-- Node.js 20+
-- An Electron-compatible environment (macOS recommended for BLE support)
+- **macOS (Apple Silicon)** — the only build currently produced/tested
+- **Node.js 20+**
+- **Xcode Command Line Tools** — `xcode-select --install`
+  (the macOS build runs `codesign` to bind BLE/TCC entitlements)
 
-### Setup
+### Build the app
 
 ```bash
+git clone --depth=1 https://github.com/yuitumunii/zmk-forge.git
+cd zmk-forge
 npm install
+npm run electron:build      # output: release/ZMK Forge-<version>-arm64.dmg
+open release
 ```
+
+Notes:
+- `src/data/release-data.json` is generated during the build. If GitHub is
+  unreachable (offline / rate-limited), a placeholder is written and the build
+  still succeeds — no `GITHUB_TOKEN` is required.
+- Native BLE support uses `@stoprocent/noble`, which ships prebuilt binaries for
+  macOS; `npm install` only compiles if a prebuild is unavailable.
 
 ### Run in development mode
 
 ```bash
+npm install
 npm run electron:dev
 ```
 
 This builds the Electron main/preload scripts, then launches Vite + Electron with hot
 reload for the renderer.
-
-### Production build
-
-```bash
-npm run electron:build
-```
-
-The distributable `.dmg` is written to `release/`.
 
 ---
 

@@ -157,7 +157,7 @@ function DeviceEditModal({
             value={form.name}
             onChange={set("name")}
             maxLength={100}
-            placeholder="Pyuron"
+            placeholder="My Keyboard"
           />
 
           {/* クローンパス */}
@@ -167,7 +167,7 @@ function DeviceEditModal({
               <input
                 value={form.clonePath}
                 onChange={set("clonePath")}
-                placeholder="/path/to/zmk-config-Pyuron"
+                placeholder="/path/to/your/zmk-config"
                 className="flex-1 rounded-md border border-border bg-base-100 px-2.5 py-1.5
                            text-sm text-base-content placeholder:text-muted
                            focus:outline-none focus:ring-2 focus:ring-primary/50"
@@ -189,7 +189,7 @@ function DeviceEditModal({
             label="キーマップ相対パス"
             value={form.keymapRelPath}
             onChange={set("keymapRelPath")}
-            placeholder="config/pyuron.keymap"
+            placeholder="config/<keyboard>.keymap"
           />
 
           {/* remote / branch を横並び */}

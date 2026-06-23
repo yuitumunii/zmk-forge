@@ -4,6 +4,9 @@
   "version": "0.3.1",
   "type": "module",
   "main": "dist-electron/main.cjs",
+  "engines": {
+    "node": ">=20"
+  },
   "description": "A ZMK keyboard configuration tool with live tuning support (fork of zmk-studio)",
   "license": "Apache-2.0",
   "author": "yuitumunii",
