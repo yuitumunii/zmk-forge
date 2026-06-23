@@ -1,0 +1,17 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="clip-v3c"><rect width="1024" height="1024" rx="229"/></clipPath>
+    <radialGradient id="main-v3c" cx=".5" cy=".5" r=".7">
+      <stop offset="0" stop-color="#4fb08c"/><stop offset="1" stop-color="#2e8b67"/>
+    </radialGradient>
+  </defs>
+  <g clip-path="url(#clip-v3c)">
+    <rect width="1024" height="1024" fill="#1a5e45"/>
+    <path d="M784 190 638 360h78l-8 184 148-170h-78z" fill="url(#main-v3c)" stroke="#f7f7f5" stroke-width="8" opacity=".58"/>
+    <path d="M650 138 430 394h116l-12 276 222-256H640z" fill="url(#main-v3c)" stroke="#a8d8c4" stroke-width="10" opacity=".8"/>
+    <path d="M464 108 148 476h168l-18 396 318-368H448z" fill="#212121" opacity=".3" transform="translate(14 18)"/>
+    <path d="M464 108 148 476h168l-18 396 318-368H448z" fill="url(#main-v3c)"/>
+    <path d="M464 108 148 476h42l316-368z" fill="#f7f7f5" opacity=".52"/>
+    <path d="M92 836h254M92 878h170" fill="none" stroke="#f7f7f5" stroke-width="14" stroke-linecap="round" opacity=".68"/>
+  </g>
+</svg>

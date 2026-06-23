@@ -1,0 +1,22 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="clip-v1c"><rect width="1024" height="1024" rx="229"/></clipPath>
+    <radialGradient id="main-v1c" cx=".5" cy=".5" r=".7">
+      <stop offset="0" stop-color="#4fb08c"/><stop offset="1" stop-color="#2e8b67"/>
+    </radialGradient>
+  </defs>
+  <g clip-path="url(#clip-v1c)">
+    <rect width="1024" height="1024" fill="#1a5e45"/>
+    <g fill="#f7f7f5" opacity=".14">
+      <rect x="82" y="650" width="112" height="92" rx="18"/><rect x="214" y="650" width="112" height="92" rx="18"/>
+      <rect x="346" y="650" width="112" height="92" rx="18"/><rect x="478" y="650" width="112" height="92" rx="18"/>
+      <rect x="610" y="650" width="112" height="92" rx="18"/><rect x="742" y="650" width="112" height="92" rx="18"/>
+      <rect x="124" y="762" width="112" height="92" rx="18"/><rect x="256" y="762" width="112" height="92" rx="18"/>
+      <rect x="388" y="762" width="248" height="92" rx="18"/><rect x="656" y="762" width="112" height="92" rx="18"/>
+    </g>
+    <path d="M586 120 264 494h190l-18 410 324-374H570z" fill="#212121" opacity=".3" transform="translate(14 18)"/>
+    <path d="M586 120 264 494h190l-18 410 324-374H570z" fill="url(#main-v1c)"/>
+    <path d="M586 120 264 494h48L634 120z" fill="#f7f7f5" opacity=".48"/>
+    <circle cx="850" cy="154" r="16" fill="#f7f7f5"/><circle cx="900" cy="154" r="11" fill="#a8d8c4"/>
+  </g>
+</svg>

@@ -1,0 +1,81 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 背景：深いダーク→わずかに温かみ -->
+    <radialGradient id="bg3" cx="0.5" cy="0.35" r="0.7">
+      <stop offset="0%" stop-color="#1a2e27"/>
+      <stop offset="100%" stop-color="#0d1410"/>
+    </radialGradient>
+    <!-- 大ボルトグラデーション -->
+    <linearGradient id="bolt3_L" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#6de8ba"/>
+      <stop offset="100%" stop-color="#2e8b67"/>
+    </linearGradient>
+    <!-- 中ボルト（少し暗め） -->
+    <linearGradient id="bolt3_M" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#4fb08c"/>
+      <stop offset="100%" stop-color="#216650"/>
+    </linearGradient>
+    <!-- 小ボルト（最も暗め） -->
+    <linearGradient id="bolt3_S" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#3a9070"/>
+      <stop offset="100%" stop-color="#184d3c"/>
+    </linearGradient>
+    <!-- 背面グロー -->
+    <filter id="glow3L" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="22" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow3M" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow3S" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="squircle3">
+      <rect width="1024" height="1024" rx="229"/>
+    </clipPath>
+  </defs>
+
+  <!-- squircle背景 -->
+  <rect width="1024" height="1024" rx="229" fill="url(#bg3)"/>
+
+  <!-- 床グロー -->
+  <ellipse cx="512" cy="870" rx="340" ry="50" fill="#2e8b67" opacity="0.1" clip-path="url(#squircle3)"/>
+
+  <!-- 水平区切りライン（スピード感） -->
+  <line x1="100" y1="512" x2="924" y2="512" stroke="#2e8b67" stroke-width="1.5" opacity="0.15"/>
+
+  <!-- 小ボルト（右・背面・最小） scale ~45% -->
+  <g transform="translate(620, 120) scale(0.45)" opacity="0.6">
+    <path d="M288 0 L0 340 L148 340 L130 524 L418 184 L270 184 Z"
+          fill="url(#bolt3_S)" filter="url(#glow3S)"/>
+    <path d="M288 0 L0 340 L40 340 L328 0 Z" fill="#9affd8" opacity="0.2"/>
+  </g>
+
+  <!-- 中ボルト（右寄り・中間距離） scale ~70% -->
+  <g transform="translate(490, 64) scale(0.70)" opacity="0.8">
+    <path d="M288 0 L0 340 L148 340 L130 524 L418 184 L270 184 Z"
+          fill="url(#bolt3_M)" filter="url(#glow3M)"/>
+    <path d="M288 0 L0 340 L40 340 L328 0 Z" fill="#9affd8" opacity="0.25"/>
+  </g>
+
+  <!-- 大ボルト（左寄り・最前面・フルサイズ） -->
+  <g transform="translate(168, 52)">
+    <!-- 影 -->
+    <path d="M288 0 L0 340 L148 340 L130 524 L418 184 L270 184 Z"
+          fill="#000000" opacity="0.3" transform="translate(6,10)"/>
+    <!-- 本体 -->
+    <path d="M288 0 L0 340 L148 340 L130 524 L418 184 L270 184 Z"
+          fill="url(#bolt3_L)" filter="url(#glow3L)"/>
+    <!-- ハイライト縁 -->
+    <path d="M288 0 L0 340 L36 340 L324 0 Z" fill="#c8fff0" opacity="0.3"/>
+    <path d="M130 524 L418 184 L380 184 L92 524 Z" fill="#c8fff0" opacity="0.15"/>
+  </g>
+
+  <!-- 速度感を示す水平ストロークライン -->
+  <line x1="80"  y1="760" x2="350" y2="760" stroke="#4fb08c" stroke-width="3" opacity="0.5" stroke-linecap="round"/>
+  <line x1="80"  y1="780" x2="260" y2="780" stroke="#4fb08c" stroke-width="2" opacity="0.3" stroke-linecap="round"/>
+  <line x1="80"  y1="798" x2="190" y2="798" stroke="#4fb08c" stroke-width="1.5" opacity="0.2" stroke-linecap="round"/>
+</svg>

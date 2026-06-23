@@ -1,0 +1,89 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 背景 -->
+    <linearGradient id="bg4" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0%" stop-color="#1e2a24"/>
+      <stop offset="100%" stop-color="#111a15"/>
+    </linearGradient>
+    <!-- シールド本体グラデーション -->
+    <linearGradient id="shield4" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0%" stop-color="#2c4438"/>
+      <stop offset="50%" stop-color="#1d3028"/>
+      <stop offset="100%" stop-color="#131f19"/>
+    </linearGradient>
+    <!-- シールドエッジ（明るい縁取り） -->
+    <linearGradient id="shieldEdge4" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0%" stop-color="#5fd4a8"/>
+      <stop offset="100%" stop-color="#2e8b67"/>
+    </linearGradient>
+    <!-- 稲妻グラデーション -->
+    <linearGradient id="bolt4" x1="0.15" y1="0" x2="0.85" y2="1">
+      <stop offset="0%" stop-color="#8bffda"/>
+      <stop offset="40%" stop-color="#4fb08c"/>
+      <stop offset="100%" stop-color="#2e8b67"/>
+    </linearGradient>
+    <!-- 内部グロー -->
+    <radialGradient id="innerGlow4" cx="0.5" cy="0.4" r="0.5">
+      <stop offset="0%" stop-color="#2e8b67" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#2e8b67" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shieldShadow" x="-20%" y="-10%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="28" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+    <filter id="boltGlow4" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="edgeGlow4" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="squircle4">
+      <rect width="1024" height="1024" rx="229"/>
+    </clipPath>
+  </defs>
+
+  <!-- squircle背景 -->
+  <rect width="1024" height="1024" rx="229" fill="url(#bg4)"/>
+
+  <!-- 背面サークル装飾 -->
+  <circle cx="512" cy="480" r="380" fill="none" stroke="#2e8b67" stroke-width="1.5" opacity="0.12" clip-path="url(#squircle4)"/>
+  <circle cx="512" cy="480" r="310" fill="none" stroke="#2e8b67" stroke-width="1"   opacity="0.08" clip-path="url(#squircle4)"/>
+
+  <!-- シールド形状（下が尖った盾型） -->
+  <!-- シールド外縁（グロー縁取り） -->
+  <path d="M512 890 C512 890 178 720 178 450 L178 210 L846 210 L846 450 C846 720 512 890 512 890 Z"
+        fill="none" stroke="url(#shieldEdge4)" stroke-width="6"
+        filter="url(#edgeGlow4)" opacity="0.9"/>
+  <!-- シールド本体 -->
+  <path d="M512 870 C512 870 198 705 198 445 L198 228 L826 228 L826 445 C826 705 512 870 512 870 Z"
+        fill="url(#shield4)" filter="url(#shieldShadow)"/>
+  <!-- シールド内部グロー -->
+  <path d="M512 870 C512 870 198 705 198 445 L198 228 L826 228 L826 445 C826 705 512 870 512 870 Z"
+        fill="url(#innerGlow4)"/>
+  <!-- シールド上縁ハイライト -->
+  <path d="M198 228 L826 228 L826 260 L198 260 Z" fill="#5fd4a8" opacity="0.08"/>
+
+  <!-- シールド上部左右コーナーリベット風アクセント -->
+  <circle cx="248" cy="270" r="12" fill="#4fb08c" opacity="0.5"/>
+  <circle cx="776" cy="270" r="12" fill="#4fb08c" opacity="0.5"/>
+  <!-- 上部横ライン装飾 -->
+  <line x1="272" y1="270" x2="752" y2="270" stroke="#4fb08c" stroke-width="1.5" opacity="0.25"/>
+
+  <!-- 稲妻（シールド中央・Z字型・大きく） -->
+  <!-- 影 -->
+  <path d="M570 298 L340 538 L458 538 L454 662 L684 422 L566 422 Z"
+        fill="#000000" opacity="0.4" transform="translate(5,8)"/>
+  <!-- 本体 -->
+  <path d="M570 298 L340 538 L458 538 L454 662 L684 422 L566 422 Z"
+        fill="url(#bolt4)" filter="url(#boltGlow4)"/>
+  <!-- ハイライト（上縁） -->
+  <path d="M570 298 L340 538 L376 538 L606 298 Z" fill="#c8fff0" opacity="0.3"/>
+  <!-- ハイライト（下縁） -->
+  <path d="M454 662 L684 422 L648 422 L418 662 Z" fill="#c8fff0" opacity="0.15"/>
+
+  <!-- シールド下部エメラルドライン装飾（3本） -->
+  <line x1="400" y1="720" x2="624" y2="720" stroke="#4fb08c" stroke-width="3" opacity="0.4" stroke-linecap="round"/>
+  <line x1="432" y1="752" x2="592" y2="752" stroke="#4fb08c" stroke-width="2" opacity="0.25" stroke-linecap="round"/>
+  <line x1="462" y1="780" x2="562" y2="780" stroke="#4fb08c" stroke-width="1.5" opacity="0.15" stroke-linecap="round"/>
+</svg>

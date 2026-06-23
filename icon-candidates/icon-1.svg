@@ -1,0 +1,78 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- スクワークル背景グラデーション -->
+    <linearGradient id="bg1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a3a2e"/>
+      <stop offset="100%" stop-color="#0f1f18"/>
+    </linearGradient>
+    <!-- 稲妻グラデーション -->
+    <linearGradient id="bolt1" x1="0.3" y1="0" x2="0.7" y2="1">
+      <stop offset="0%" stop-color="#5fd4a8"/>
+      <stop offset="50%" stop-color="#2e8b67"/>
+      <stop offset="100%" stop-color="#1d6b4e"/>
+    </linearGradient>
+    <!-- 内側光彩フィルタ -->
+    <filter id="glow1" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- キーグリッド用クリップ -->
+    <clipPath id="squircle1">
+      <rect width="1024" height="1024" rx="229"/>
+    </clipPath>
+  </defs>
+
+  <!-- squircle背景 -->
+  <rect width="1024" height="1024" rx="229" fill="url(#bg1)"/>
+
+  <!-- キーボードグリッド（背景パターン・低透明度） -->
+  <g clip-path="url(#squircle1)" opacity="0.08">
+    <!-- 上段キー -->
+    <rect x="80"  y="630" width="80" height="72" rx="10" fill="#4fb08c"/>
+    <rect x="174" y="630" width="80" height="72" rx="10" fill="#4fb08c"/>
+    <rect x="268" y="630" width="80" height="72" rx="10" fill="#4fb08c"/>
+    <rect x="362" y="630" width="80" height="72" rx="10" fill="#4fb08c"/>
+    <rect x="456" y="630" width="80" height="72" rx="10" fill="#4fb08c"/>
+    <rect x="550" y="630" width="80" height="72" rx="10" fill="#4fb08c"/>
+    <rect x="644" y="630" width="80" height="72" rx="10" fill="#4fb08c"/>
+    <rect x="738" y="630" width="80" height="72" rx="10" fill="#4fb08c"/>
+    <rect x="832" y="630" width="80" height="72" rx="10" fill="#4fb08c"/>
+    <!-- 中段キー -->
+    <rect x="120" y="716" width="80" height="72" rx="10" fill="#4fb08c"/>
+    <rect x="214" y="716" width="80" height="72" rx="10" fill="#4fb08c"/>
+    <rect x="308" y="716" width="80" height="72" rx="10" fill="#4fb08c"/>
+    <rect x="402" y="716" width="80" height="72" rx="10" fill="#4fb08c"/>
+    <rect x="496" y="716" width="80" height="72" rx="10" fill="#4fb08c"/>
+    <rect x="590" y="716" width="80" height="72" rx="10" fill="#4fb08c"/>
+    <rect x="684" y="716" width="80" height="72" rx="10" fill="#4fb08c"/>
+    <rect x="778" y="716" width="80" height="72" rx="10" fill="#4fb08c"/>
+    <!-- 下段キー -->
+    <rect x="80"  y="802" width="140" height="72" rx="10" fill="#4fb08c"/>
+    <rect x="234" y="802" width="80"  height="72" rx="10" fill="#4fb08c"/>
+    <rect x="328" y="802" width="80"  height="72" rx="10" fill="#4fb08c"/>
+    <rect x="422" y="802" width="180" height="72" rx="10" fill="#4fb08c"/>
+    <rect x="616" y="802" width="80"  height="72" rx="10" fill="#4fb08c"/>
+    <rect x="710" y="802" width="80"  height="72" rx="10" fill="#4fb08c"/>
+    <rect x="804" y="802" width="140" height="72" rx="10" fill="#4fb08c"/>
+  </g>
+
+  <!-- ZMK Z字型稲妻（公式モチーフ・太くエッジシャープ） -->
+  <!-- 影レイヤー -->
+  <path d="M578 140 L290 480 L460 480 L446 884 L734 544 L564 544 Z"
+        fill="#000000" opacity="0.35" transform="translate(8,10)"/>
+  <!-- 本体 -->
+  <path d="M578 140 L290 480 L460 480 L446 884 L734 544 L564 544 Z"
+        fill="url(#bolt1)" filter="url(#glow1)"/>
+  <!-- ハイライト（左上縁にエッジ） -->
+  <path d="M578 140 L290 480 L330 480 L618 140 Z" fill="#8aecd1" opacity="0.35"/>
+  <!-- 右下縁ハイライト -->
+  <path d="M446 884 L734 544 L694 544 L406 884 Z" fill="#8aecd1" opacity="0.2"/>
+
+  <!-- 右上コーナーに小さな「ZMK」モノグラム風アクセントドット3個 -->
+  <circle cx="870" cy="154" r="14" fill="#4fb08c" opacity="0.7"/>
+  <circle cx="910" cy="154" r="10" fill="#4fb08c" opacity="0.5"/>
+  <circle cx="942" cy="154" r="6"  fill="#4fb08c" opacity="0.3"/>
+</svg>

@@ -1,0 +1,19 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="clip-v2b"><rect width="1024" height="1024" rx="229"/></clipPath>
+    <linearGradient id="main-v2b" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#1a5e45"/><stop offset="1" stop-color="#4fb08c"/>
+    </linearGradient>
+  </defs>
+  <g clip-path="url(#clip-v2b)">
+    <rect width="1024" height="1024" fill="#f7f7f5"/>
+    <ellipse cx="512" cy="838" rx="322" ry="54" fill="#1a5e45" opacity=".16"/>
+    <path d="M164 338 236 410v370l-72-72z" fill="#1a5e45"/>
+    <path d="m788 338 72 72v370l-72-72z" fill="#2e8b67"/>
+    <path d="m164 708 72 72h624l-72-72z" fill="#1a5e45" opacity=".82"/>
+    <rect x="164" y="246" width="624" height="462" rx="64" fill="url(#main-v2b)" stroke="#1a5e45" stroke-width="12"/>
+    <rect x="208" y="290" width="536" height="374" rx="42" fill="#f7f7f5" stroke="#1a5e45" stroke-width="12"/>
+    <path d="M566 314 354 548h112l-10 154 214-234H558z" fill="url(#main-v2b)" stroke="#1a5e45" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M566 314 354 548h34l212-234z" fill="#a8d8c4" opacity=".55"/>
+  </g>
+</svg>
