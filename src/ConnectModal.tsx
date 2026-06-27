@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { RpcTransport } from "@zmkfirmware/zmk-studio-ts-client/transport/index";
 import { UserCancelledError } from "@zmkfirmware/zmk-studio-ts-client/transport/errors";
@@ -151,12 +151,10 @@ function SimpleDevicePicker({
   transports,
   onTransportCreated,
   autoConnecting,
-  onError,
 }: {
   transports: TransportFactory[];
   onTransportCreated: (t: RpcTransport) => void;
   autoConnecting?: boolean;
-  onError?: (msg: string) => void;
 }) {
   const [availableDevices, setAvailableDevices] = useState<
     AvailableDevice[] | undefined
@@ -164,6 +162,29 @@ function SimpleDevicePicker({
   const [selectedTransport, setSelectedTransport] = useState<
     TransportFactory | undefined
   >(undefined);
+  // 初回接続のハマりどころ対策:
+  // 既に Mac とペアリング済みで「キーボードとして接続中」のデバイスは BLE 広告を
+  // 出さないため、1回のスキャンでは見つからない。見つからなくても自動でスキャンを
+  // 繰り返し(キャンセルするまで)、ペアリングモードへの誘導を出し続ける。
+  // attempts>=1 になったら「初めて繋ぐ時のヒント」を表示する。
+  const [retryNonce, setRetryNonce] = useState(0);
+  const [attempts, setAttempts] = useState(0);
+  const retryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const stopSearch = useCallback(() => {
+    if (retryTimer.current) {
+      clearTimeout(retryTimer.current);
+      retryTimer.current = null;
+    }
+    setAttempts(0);
+    setSelectedTransport(undefined);
+  }, []);
+
+  const startSearch = useCallback((t: TransportFactory) => {
+    setAttempts(0);
+    setRetryNonce(0);
+    setSelectedTransport(t);
+  }, []);
 
   useEffect(() => {
     if (!selectedTransport) {
@@ -182,16 +203,21 @@ function SimpleDevicePicker({
             if (transport) {
               onTransportCreated(transport);
             }
-            setSelectedTransport(undefined);
+            stopSearch();
           }
         } catch (e) {
-          if (!ignore) {
-            console.error(e);
-            if (e instanceof Error && !(e instanceof UserCancelledError)) {
-              onError?.(e.message);
-            }
-            setSelectedTransport(undefined);
+          if (ignore) return;
+          // ユーザーが明示キャンセルした時だけ停止。それ以外(=「見つからない」や
+          // 一時失敗)は自動で再スキャンし続ける(誘導を出したまま)。
+          if (e instanceof UserCancelledError) {
+            stopSearch();
+            return;
           }
+          console.error(e);
+          setAttempts((a) => a + 1);
+          retryTimer.current = setTimeout(() => {
+            setRetryNonce((n) => n + 1);
+          }, 1500);
         }
       };
 
@@ -211,8 +237,16 @@ function SimpleDevicePicker({
     return () => {
       ignore = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally runs only on selectedTransport change (upstream zmk-studio pattern)
-  }, [selectedTransport]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- selectedTransport/retryNonce が変わった時だけ再スキャン
+  }, [selectedTransport, retryNonce]);
+
+  // アンマウント時に保留中のリトライを止める。
+  useEffect(
+    () => () => {
+      if (retryTimer.current) clearTimeout(retryTimer.current);
+    },
+    []
+  );
 
   // A direct-connect transport (USB/BLE) is "scanning" while its connect()
   // promise is pending (waiting for the OS device chooser / BLE discovery).
@@ -234,7 +268,7 @@ function SimpleDevicePicker({
           variant="primary"
           className="w-full justify-center gap-2"
           disabled={scanning || autoConnecting}
-          onClick={() => setSelectedTransport(bleTransport)}
+          onClick={() => startSearch(bleTransport)}
         >
           <Bluetooth className="size-4" aria-hidden />
           BLE で接続
@@ -250,7 +284,7 @@ function SimpleDevicePicker({
                 variant="outline"
                 className="w-full justify-center"
                 disabled={scanning || autoConnecting}
-                onClick={() => setSelectedTransport(t)}
+                onClick={() => startSearch(t)}
               >
                 {t.label}
               </UiButton>
@@ -259,20 +293,48 @@ function SimpleDevicePicker({
         </ul>
       )}
 
-      {/* スキャン中帯 */}
+      {/* スキャン中帯 + 初回接続ヒント */}
       {scanning && (
-        <div className="flex items-center gap-2 rounded-md border border-border bg-base-300 px-3 py-2">
-          <RefreshCw className="size-4 animate-spin shrink-0 text-muted" />
-          <span className="text-sm text-base-content flex-1">
-            デバイスを探しています… キーボードの電源を入れてください
-          </span>
-          <button
-            type="button"
-            className="ml-auto rounded-md bg-base-100 hover:bg-base-200 px-2 py-1 text-sm transition-colors"
-            onClick={() => setSelectedTransport(undefined)}
-          >
-            キャンセル
-          </button>
+        <div className="flex flex-col gap-2 rounded-md border border-border bg-base-300 px-3 py-2">
+          <div className="flex items-center gap-2">
+            <RefreshCw className="size-4 animate-spin shrink-0 text-muted" />
+            <span className="text-sm text-base-content flex-1">
+              デバイスを探しています… キーボードの電源を入れてください
+            </span>
+            <button
+              type="button"
+              className="ml-auto rounded-md bg-base-100 hover:bg-base-200 px-2 py-1 text-sm transition-colors"
+              onClick={stopSearch}
+            >
+              キャンセル
+            </button>
+          </div>
+
+          {attempts >= 1 && (
+            <div className="border-t border-border pt-2 text-xs leading-relaxed text-muted">
+              <p className="mb-0.5 font-medium text-base-content">
+                まだ見つかりません — 初めて繋ぐ場合のヒント
+              </p>
+              <p>
+                このキーボードが既に Bluetooth でこの Mac
+                とつながっている（普通に入力できる）状態だと、電波を出さないため
+                見つかりません。下のどちらかで「ペアリングモード」にしてください:
+              </p>
+              <ul className="mt-1 list-inside list-disc space-y-0.5">
+                <li>
+                  キーボード側で Bluetooth プロファイルをクリア／空き枠に切替（ZMK
+                  なら BT&nbsp;CLR か BT&nbsp;SEL）
+                </li>
+                <li>
+                  または「システム設定 → Bluetooth」でこのキーボードを
+                  <span className="font-medium">接続解除</span>
+                </li>
+              </ul>
+              <p className="mt-1">
+                そのまま探し続けます。電波が出れば自動でつながります。
+              </p>
+            </div>
+          )}
         </div>
       )}
 
@@ -286,7 +348,7 @@ function SimpleDevicePicker({
                 onTransportCreated(
                   await selectedTransport!.pick_and_connect!.connect(d)
                 );
-                setSelectedTransport(undefined);
+                stopSearch();
               }}
             >
               <Bluetooth className="size-4 shrink-0 text-muted" aria-hidden />
@@ -365,7 +427,6 @@ function ConnectOptions({
       transports={transports}
       onTransportCreated={onTransportCreated}
       autoConnecting={autoConnecting}
-      onError={onError}
     />
   ) : (
     <DeviceList
