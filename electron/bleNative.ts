@@ -118,6 +118,60 @@ function scanAndConnect(n: any, dbg: Dbg, timeoutMs = 20000): Promise<any> {
   });
 }
 
+// キャッシュUUIDへの直接接続(タイムアウト付き)。
+//
+// noble の connectAsync 自体はタイムアウトを持たず、対象の機体が手元に無い/到達
+// できない状態だと CoreBluetooth が永久に接続を試み続け、Promise が resolve も
+// reject もしない=「永久ハング」になる。これにより起動時の自動接続(App.tsx)が
+// 全画面「接続中…」のまま固まり、汎用スキャンにもペアリングモード誘導にも到達
+// できない実害があった(2026-06-27実機検証で確認)。
+//
+// ここで時間を区切り、繋がらなければ noble の保留中接続を cancelConnect() で
+// 打ち切って呼び出し元へ失敗を返す。呼び出し元はそのまま汎用スキャンへ
+// フォールバックする。cancelConnect は対象の connect:<id> イベントを
+// Error('connection canceled!') で発火させるため、内側の connectAsync も
+// reject して後始末される。
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- noble + peripheral are untyped native bridges
+function connectByCachedUuid(n: any, uuid: string, dbg: Dbg, timeoutMs = 8000): Promise<any> {
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    const timer = setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      dbg("[ble] cached connect timed out — cancelling", uuid);
+      try {
+        n.cancelConnect(uuid);
+      } catch {
+        /* best effort */
+      }
+      reject(new Error("cached connect timed out"));
+    }, timeoutMs);
+    n.connectAsync(uuid).then(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- noble peripheral is untyped
+      (p: any) => {
+        if (settled) {
+          // タイムアウト後に遅れて成功した場合は後始末して捨てる。
+          try {
+            p?.disconnectAsync?.();
+          } catch {
+            /* ignore */
+          }
+          return;
+        }
+        settled = true;
+        clearTimeout(timer);
+        resolve(p);
+      },
+      (err: unknown) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        reject(err instanceof Error ? err : new Error(String(err)));
+      }
+    );
+  });
+}
+
 // モジュールスコープで保持: アプリ終了時に shutdownBle() から後始末できるように。
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- noble peripheral object is untyped
 let peripheral: any = null;
@@ -163,10 +217,10 @@ export function registerBleIpc(deps: BleDeps): void {
     if (cached) {
       try {
         dbg("[ble] connect by cached uuid", cached);
-        peripheral = await n.connectAsync(cached);
+        peripheral = await connectByCachedUuid(n, cached, dbg);
         dbg("[ble] cached connect ok, state=", peripheral.state);
       } catch (e) {
-        dbg("[ble] cached connect failed, will scan:", String(e));
+        dbg("[ble] cached connect failed/timeout, will scan:", String(e));
         peripheral = null;
       }
     }
